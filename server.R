@@ -53,7 +53,9 @@ shinyServer(
             }
             
             rank <- inRank()
-            reduced <- decomposed$u[, 1:rank] %*% diag(decomposed$d[1:rank]) %*% t(decomposed$v[, 1:rank])
+            reduced <- decomposed$u[, 1:rank] %*%
+                        diag(decomposed$d[1:rank]) %*%
+                        t(decomposed$v[, 1:rank])
             apply(reduced, c(1, 2), function (color) {
                 return(max(0, min(1, color)))
             })

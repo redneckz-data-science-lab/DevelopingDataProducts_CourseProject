@@ -1,0 +1,62 @@
+Singular Value Decomposition
+========================================================
+author: Alexander Alexandrov
+date: Saturday, March 12, 2016
+
+SVD Overview
+========================================================
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Singular_value_decomposition.gif" alt="SVD Illustration" style="float: right" />
+
+Visualization of the SVD of a two-dimensional, real shearing matrix **M**. The SVD decomposes **M** into three simple transformations.
+
+1. Rotation **V**<sup>*</sup>
+2. Scaling **Σ**
+3. Rotation **U**
+
+Random Data
+========================================================
+
+Let's generate some random data 40x10. Then add some pattern. So most of the rows from 5 up to 10 column are shifted by some value.
+
+```{r, echo=F}
+set.seed(12345)
+row.count <- 40
+col.count <- 10
+rdata <- matrix(rnorm(row.count * col.count), nrow=row.count)
+for (i in 1:row.count) {
+    coin.flip <- rbinom(1, size=1, prob=0.5)
+    if (coin.flip) {
+        rdata[i, ] <- rdata[i, ] + rep(c(0, 3), each=col.count / 2)
+    }
+}
+heatmap(rdata)
+```
+
+Hierarchical Clustering
+========================================================
+
+```{r, echo=F}
+rdata.ordered <- rdata[hclust(dist(rdata))$order, ]
+
+par(mfrow = c(1, 3))
+image(1:col.count, 1:row.count, t(rdata.ordered), xlab="", ylab="")
+plot(rowMeans(rdata), main="Row Means", pch=19, xlab="", ylab="")
+plot(colMeans(rdata), main = "Col Means", pch = 19, xlab="", ylab="")
+```
+
+Pattern *injected* into the random data is not evident.
+
+Hierarchical Clustering + SVD
+========================================================
+
+```{r, echo=F}
+rdata.decomposed <- svd(scale(rdata.ordered))
+
+par(mfrow = c(1, 3))
+image(1:col.count, 1:row.count, t(rdata.ordered))
+plot(rdata.decomposed$u[, 1], main="First Left Singular Vector", pch=19, xlab="", ylab="")
+plot(rdata.decomposed$v[, 1], main="First Right Singular Vector", pch=19, xlab="", ylab="")
+```
+
+First singular vectors have *catched* most of the variance and pattern has become evident.
