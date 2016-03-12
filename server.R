@@ -90,7 +90,7 @@ shinyServer(
             rank <- inRank()
             x <- 1:length(decomposed$d)
             y <- decomposed$d^2 / sum(decomposed$d^2)
-            plot(x, y, main="Variance explained",
+            plot(x, y, main="Singular Values (Variance)",
                  col=ifelse(x <= rank, "red", "black"),
                  xlab="", ylab="", pch = 19)
         })
@@ -101,9 +101,9 @@ shinyServer(
                 return(NULL)
             }
             
-            plot(0, 0, xlim=c(0, 1), ylim=c(0, 1), main="Reduced Image",
+            plot(0, 0, xlim=c(0, 1), ylim=c(0, 1), main="Restored/Reduced Image",
                  xlab="", ylab="")
             rasterImage(reduced, 0, 0, 1, 1)
         })
     }
-);
+)
